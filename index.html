@@ -4,18 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
     <h1>Check this out</h1>
-    <button id="redraw">redraw</button>
+    <p>Note: For youtube backgroud images you will need to bypass cors with <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en">this extension</a>.  Once it is installed remove the default pattern and add these ... </p>
+    <pre>
+        https://*.googlevideo.com/*
+        https://www.youtube.com/get_video_info
+    </pre>
+    <form class="pure-form pure-form-aligned" onsubmit="return false;">
+            <fieldset>
+                <div class="pure-control-group">
+                    <label for="description">Description</label>
+                    <input id="description" type="text" placeholder="Description">
+                </div>
+        
+                <div class="pure-control-group">
+                        <label for="subtext">Subtext</label>
+                        <input id="subtext" type="text" placeholder="Subtext">
+                </div>
+
+                <div class="pure-control-group">
+                        <label for="youtubeurl">Youtube Share Url</label>
+                        <input id="youtubeurl" type="text" placeholder="Youtube Share Url">
+                </div>
+        
+                <div class="pure-controls">
+                    <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
+                </div>
+            </fieldset>
+        </form>
     <!-- <img src="images/gamingTrendLogo.png"> -->
     <div>
         <canvas id="canvas" width="1280" height="720"></canvas>
         <img id="ref-image" src="/images/youtube-thumb.png">
     </div>
+    <div><img id="sample"></div>
 </body>
 <script src="index.ts"></script>
 </html>
