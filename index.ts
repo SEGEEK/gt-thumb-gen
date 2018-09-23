@@ -94,25 +94,17 @@ class VideoFrameExtractor{
 window.devicePixelRatio = 1;
 console.log(imgPath);
 
-function draw(input: ThumbnailGenInput){
+let gamingTrendLogo = convertURIToImageData(imgPath);
 
+function draw(input: ThumbnailGenInput){
+console.log('draw called', input);
 
 let ctx = canvas.getContext('2d');
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// ctx.drawImage(input.backgroundImage,0,0);
+ctx.drawImage(input.backgroundImage,0,0);
 
 drawOverlay(ctx);
-// ctx.shadowColor = 'black';
-// ctx.shadowBlur = 0;
-// ctx.shadowOffsetX = 0;
-// ctx.shadowOffsetY = 7;
-
-// ctx.font = '54pt Gothic';
-// ctx.fillStyle = 'white';
-
-// ctx.fillText('GAMING', 10, 50);
-// ctx.fillText('TREND', 10, 105);
 
     if(input.description){
         drawDescription(ctx, input.description);
@@ -120,11 +112,7 @@ drawOverlay(ctx);
     if(input.subText) {
         drawSubText(ctx, input.subText);
     }
-    var gtImage = new Image;
-    gtImage.addEventListener("load", function () {
-        canvas.getContext("2d").drawImage(gtImage, 20, 590);
-    });
-gtImage.setAttribute('src', imgPath);
+    gamingTrendLogo.then(gtImage => canvas.getContext("2d").drawImage(gtImage, 20, 590));
 };
 
 // var backgroundImage = new Image;
@@ -140,9 +128,11 @@ document.getElementById('redraw').onclick = () => {
     if(youtubeUrl){
         let youtubeInfo = YoutubeVideo.parseYoutubeUrl(youtubeUrl);
         getVideoFrame(youtubeInfo.id, youtubeInfo.seconds)
-        .then((dataUrl) => (document.getElementById('sample') as HTMLImageElement).setAttribute('src', dataUrl);)
+        .then(convertURIToImageData)
+        .then(backgroundImage => draw({description:desc, subText:sub, backgroundImage}));
+    } else {
+        draw({description:desc, subText: sub});
     }
-    draw({description:desc, subText: sub});
 };
 // draw(backgroundImage);
 
@@ -190,8 +180,19 @@ function drawSubText(ctx, desc){
     canvas.style.letterSpacing = oldLetterSpacing;  
 }
 
+async function convertURIToImageData(URI) {
+    return new Promise<HTMLImageElement>(function(resolve, reject) {
+      if (URI == null) return reject();    
+          var image = new Image();
+      image.addEventListener('load', function() {   
+        resolve(image);
+      }, false);
+      image.setAttribute('src', URI);
+    });
+  }
+
 interface ThumbnailGenInput{
-    backgroundImage?: ImageData | HTMLImageElement | HTMLVideoElement;
+    backgroundImage?: HTMLCanvasElement | HTMLVideoElement | HTMLImageElement | ImageBitmap;
     description?: string;
     subText?: string;
 }

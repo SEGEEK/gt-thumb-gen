@@ -76,6 +76,8 @@ export class YoutubeVideo{
             if(res){
                 id=res[1];
                 timeString = res[3];
+            } else {
+                throw new Error('Invalid Youtube url specified');
             }
         }
         return {id, seconds: this.timestringToSeconds(timeString)};
