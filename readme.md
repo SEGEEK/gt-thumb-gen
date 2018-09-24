@@ -52,4 +52,4 @@ The github pages setup has things looking at the master branch/docs folder so th
  1. Potentially make a library around some of the functionality (I stole the youtubeVideo code from https://github.com/endlesshack/youtube-video and ported it to typescript).  It may be handy for other folks to use, although with the CORS issues I ran into I am not sure how useful it would be, or if others are willing to sink to my depths.  (Perhaps a CORS proxy like https://cors.io/ can help here ...)
 
  # License
- Do what you want but you are on your own license.  Feel free to use this code, probably shouldn't run nuclear power plants with it but hey I am not here to tell you what to do.  Either way, have fun but don't blame me if you cause an international incident or cause.
+ Do what you want but you are on your own license.  Feel free to use this code, probably shouldn't run nuclear power plants with it but hey I am not here to tell you what to do.  Either way, have fun but don't blame me if you cause an international incident or a reactor meltdown.
