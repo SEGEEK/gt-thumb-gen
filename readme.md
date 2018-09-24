@@ -3,10 +3,13 @@ This uses an html5 canvas to generate a thumbnail graphic suitable for use on ga
 
 Try it out!  https://segeek.github.io/gt-thumb-gen/
 
-## Why would you do this?
-Been playing with canvas stuff at work, my wife is generating these things by hand using a photoshop template and it seems like too much of a hassel for me.  I wanted to play around to see how hard it would be to extract a video frame and put it into a canvas at an arbitrary time stamp.  Turns out it is pretty easy ... until the dreaded CORS rears its ugly head.
+## Why would you unleash this monstrosity upon the world?
+Been playing with HTML canvas stuff at work on some hack day projects, my wife is generating these things by hand using a photoshop template and it seems like too much of a hassel for me.  I wanted to play around to see how hard it would be to extract a video frame and put it into a canvas at an arbitrary time stamp.  Turns out it is pretty easy ... until the dreaded CORS rears its ugly head.
 
 Also been wanting to check out [github pages](https://pages.github.com/) for a while, and do a side project using [parcel](https://parceljs.org/)
+
+## But why a canvas it is much easier to just draw stuff on dom and use some CSS
+I tried to get [dom-to-image](https://github.com/tsayen/dom-to-image#readme) to work, but unfortuantely I was running into issues with the text being very blurry.  I am apparently not the only one [to experience this issue](https://github.com/tsayen/dom-to-image/issues/69).  Would be nice to see if that would be workable ... but working in Canvas isn't so bad.
 
 ## Credits
 Special thanks to [Bertrand Martel](https://github.com/bertrandmartel) for an [Excellent Answer](https://stackoverflow.com/a/43012205) on stack overflow (With running code sample!) on how to do something very similiar to what I wanted.
@@ -14,6 +17,8 @@ Special thanks to [Bertrand Martel](https://github.com/bertrandmartel) for an [E
 Also big thanks to [Endless Hack](https://github.com/endlesshack) for an [useful bit of code](https://github.com/endlesshack/youtube-video) that finds information out about a youtube video.  Looks like the primary contributer there is [Johannes Wagener](https://github.com/jwagener), thanks Johannes!
 
 Would also like to thank [Dave Geddes](https://twitter.com/geddski) for a technique for testing layout changes against another image by overlaying your html over an transparent image of what you want to create.  Check out that video [here](https://gedd.ski/build/overwatch-hero-picker/), that was great for making sure my font size/positioning matched exactly the reference image I was comparing to.
+
+Last but not least the fine folks at html5rocks.com.  They have a bevy of useful [tutorials](https://www.html5rocks.com/en/tutorials/canvas/texteffects/#toc-text-shadows) about how to do fancy things with the canvas element.
 
 # The Build
 Typical node stuff, you will need a version of node 8+ range is fine.
