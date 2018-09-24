@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build index.html --out-dir docs",
+    "clean": "rimraf docs/*",
+    "build": "parcel build index.html --out-dir docs --public-url ./gt-thumb-gen/",
     "dev": "parcel index.html"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^1.9.7"
+    "parcel": "^1.9.7",
+    "rimraf": "^2.6.2"
   }
 }
