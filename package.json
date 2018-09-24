@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf docs/*",
-    "build": "parcel build index.html --out-dir docs --public-url ./gt-thumb-gen/",
+    "build": "parcel build index.html --out-dir docs --public-url https://segeek.github.io/gt-thumb-gen/",
     "dev": "parcel index.html"
   },
   "author": "",
