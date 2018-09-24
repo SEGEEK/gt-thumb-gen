@@ -5,57 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    <!-- <link rel="stylesheet" href="./style.css"> doesn't build when this is referenced for some reason ... -->
     <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
-    <title>Document</title>
+    <title>Thumnail Generator</title>
     <style>
+        nav{
+            display: flex;
+            background-color: black;
+            color:white;
+            align-content: center;
+            align-items: center;
+            padding-left: 60px;
+        }
+        
+        .flexrow{
+            display: flex;
+            justify-content: center;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+        nav .logo{
+            max-width: 200px;
+            margin-right: 50px;
+        }
+        
+        .callout{
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            border-left-width: 5px;
+            border-radius: 3px;
+            border-left-color: #aa0808;
+            background-color: #ad7b7b;
+        }
+        
+        .callout h1{
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 19pt;
+        }
+
+        body{
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        /* these were for debugging ... keeping it around for a bit */
         #canvas{
             position: absolute;
             opacity: 1;
             z-index: 200;
         }
-
+        
         #ref-image{
             position: absolute;
             opacity: 0;
-        }
-    </style>
+        }</style>
 </head>
-<body>
-    <h1>Check this out</h1>
-    <p>Note: For youtube backgroud images you will need to bypass cors with <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en">this extension</a>.  Once it is installed remove the default pattern and add these ... </p>
-    <pre>
-        https://*.googlevideo.com/*
-        https://www.youtube.com/get_video_info
-    </pre>
-    <form class="pure-form pure-form-aligned" onsubmit="return false;">
-            <fieldset>
-                <div class="pure-control-group">
-                    <label for="description">Description</label>
+<body ondragover="return false;">
+    <nav>
+        <img class="logo" src="http://gamingtrend.com/wp-content/uploads/2017/09/site-logo@2x.png" alt="GAMING TREND">
+        <span>Thumnail Image Generator</span>
+    </nav>
+    <div class="flexrow">
+        <div>
+            <p>Directions: Either drag and drop a background image anywhere on this page, or paste the 'youtube share code' (with optional timestamp)</p>
+            <p>Specify the text description and subtext for the image, then click 'draw image'.  Once the image is rendered you can right click the image and choose the 'save as' option to save the image.</p>
+            <div class="callout">
+                <h1>Requirements for using youtube video as background image</h1>
+                <p>Note: For youtube backgroud images you will need to bypass cors with <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en">this extension</a>.  Once it is installed remove the default pattern and add these ... </p>
+                <ul>
+                    <li><pre>https://*.googlevideo.com/*</pre></li>
+                    <li><pre>https://www.youtube.com/get_video_info</pre></li>
+                </ul>
+                <p>Be sure to turn the extension off when you are done with this page as it may cause issues on other sites.</p>
+            </div>
+        </div>
+    </div>
+    <form class="pure-form pure-form-stacked" onsubmit="return false;"></form>
+    <div class="flexrow">
+        
+            <fieldset class="pure-group">
+                <!-- <div class="pure-control-group"> -->
+                    <!-- <label for="description">Description</label> -->
                     <input id="description" type="text" placeholder="Description">
-                </div>
+                <!-- </div> -->
         
-                <div class="pure-control-group">
-                        <label for="subtext">Subtext</label>
-                        <input id="subtext" type="text" placeholder="Subtext">
-                </div>
-
-                <div class="pure-control-group">
-                        <label for="youtubeurl">Youtube Share Url</label>
-                        <input id="youtubeurl" type="text" placeholder="Youtube Share Url">
-                </div>
-        
-                <div class="pure-controls">
-                    <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
-                </div>
+                <!-- <div class="pure-control-group"> -->
+                        <!-- <label for="subtext">Subtext</label> -->
+                    <input id="subtext" type="text" placeholder="Subtext">
+                <!-- </div> -->
             </fieldset>
-        </form>
-    <!-- <img src="images/gamingTrendLogo.png"> -->
-    <div>
+            <fieldset class="pure-group">
+                <!-- <div class="pure-control-group"> -->
+                        <!-- <label for="youtubeurl">Youtube Share Url</label> -->
+                        <input id="youtubeurl" type="text" placeholder="Youtube Share Url">
+                <!-- </div> -->
+
+                <div id="dropPreview"></div>
+        
+                
+            </fieldset>
+            
+        </div>
+        <div class="flexrow">
+            <div class="pure-controls">
+                <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
+            </div></div>
+    </form>
+    <div class="flexrow">
         <canvas id="canvas" width="1280" height="720"></canvas>
         <img id="ref-image" src="/images/youtube-thumb.png">
-    </div>
-    <div><img id="sample"></div>
+    </div>    
 </body>
 <script src="./index.ts"></script>
 </html>

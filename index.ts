@@ -7,9 +7,52 @@ import {YoutubeVideo} from './youtube-video';
 var urls = ['https://youtu.be/X_Ch70KkMtE?t=2m57s', 'https://youtu.be/X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE&t=2m57s'];
 urls.forEach(u => console.log(u, YoutubeVideo.parseYoutubeUrl(u)));
 
+interface Rect{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+function getAdjustmentForImageAndCanvas(imageRect:Rect, canvasRect: Rect) : {source:Rect, destination:Rect} {
+    if(imageRect.width === canvasRect.width && imageRect.height === canvasRect.height){
+        return {
+            source: {...imageRect},
+            destination: {... imageRect}
+        };
+    }
+    //example time ... 10x5 going into 10x10
+    // scale image by 2 to 20x10 into 10x10
+     //
+    return {
+        source:{x: 0, y: 0, width: 0, height:0},
+        destination: {x: 0, y: 0, width: 0, height:0}
+    };
+}
+
+let backgroundImagePromise: Promise<HTMLImageElement>  = new Promise((resolve,reject) => reject('No Background Image specified');
 
 let description = 'Holly Saves Time' //'Naval Combat and Recruiting';
 let subText = "Wow this is awesome, I can't believe it"//"Assasin's Creed Odyssey - PC - 4K Max Settings";
+
+document.body.addEventListener('drop', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var file = e.dataTransfer.files[0];
+    var reader = new FileReader();
+
+    document.getElementById('dropPreview')
+    .innerHTML = `Background Image: ${file.name} - type:${file.type} - size ${file.size}B`;
+    console.info('dropped file detected', file);
+  
+    reader.onload = function (e) {
+      // image.src = e.target.result;
+    //   image.src = reader.result as string;
+      backgroundImagePromise = convertURIToImageData(reader.result)
+    //   image.onload = setUp;
+    }
+    reader.readAsDataURL(file);
+  })
 
 async function getVideoUrl(videoId ) {
     return YoutubeVideo.getVideoInfo(videoId)
@@ -86,11 +129,6 @@ class VideoFrameExtractor{
     }
 }
 
-// getVideoFrame('-0xQag7xSKk', 30 )//(10 * 60) + 7)
-// .then((dataUrl) => {
-//     (document.getElementById('sample') as HTMLImageElement).setAttribute('src', dataUrl);
-//     });
-
 window.devicePixelRatio = 1;
 console.log(imgPath);
 
@@ -102,7 +140,7 @@ console.log('draw called', input);
 let ctx = canvas.getContext('2d');
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-ctx.drawImage(input.backgroundImage,0,0);
+ctx.drawImage(input.backgroundImage,0,0,canvas.width, canvas.height);
 
 drawOverlay(ctx);
 
@@ -131,10 +169,9 @@ document.getElementById('redraw').onclick = () => {
         .then(convertURIToImageData)
         .then(backgroundImage => draw({description:desc, subText:sub, backgroundImage}));
     } else {
-        draw({description:desc, subText: sub});
+        backgroundImagePromise.then(backgroundImage => draw({description:desc, subText: sub, backgroundImage}));
     }
 };
-// draw(backgroundImage);
 
 function drawOverlay(ctx: CanvasRenderingContext2D){
     var gradient = ctx.createLinearGradient(0,530,0,720);
