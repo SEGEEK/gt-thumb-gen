@@ -1,11 +1,15 @@
 let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
 import imgPath from './images/gamingTrendLogo.png';
-import backgroundImagePath from './images/background.png';
+// import backgroundImagePath from './images/background.png';
 import {YoutubeVideo} from './youtube-video';
 
 var urls = ['https://youtu.be/X_Ch70KkMtE?t=2m57s', 'https://youtu.be/X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE&t=2m57s'];
 urls.forEach(u => console.log(u, YoutubeVideo.parseYoutubeUrl(u)));
+
+let body = document.body;
+
+
 
 interface Rect{
     x: number;
@@ -30,7 +34,8 @@ function getAdjustmentForImageAndCanvas(imageRect:Rect, canvasRect: Rect) : {sou
     };
 }
 
-let backgroundImagePromise: Promise<HTMLImageElement>  = new Promise((resolve,reject) => reject('No Background Image specified');
+// let backgroundImagePromise: Promise<HTMLImageElement>  = new Promise((resolve,reject) => reject('No Background Image specified'));
+let backgroundImagePromise: Promise<HTMLImageElement> | undefined = undefined;
 
 let description = 'Holly Saves Time' //'Naval Combat and Recruiting';
 let subText = "Wow this is awesome, I can't believe it"//"Assasin's Creed Odyssey - PC - 4K Max Settings";
@@ -48,7 +53,7 @@ document.body.addEventListener('drop', function (e) {
     reader.onload = function (e) {
       // image.src = e.target.result;
     //   image.src = reader.result as string;
-      backgroundImagePromise = convertURIToImageData(reader.result)
+      backgroundImagePromise = convertURIToImageData(reader.result);
     //   image.onload = setUp;
     }
     reader.readAsDataURL(file);
@@ -128,9 +133,6 @@ class VideoFrameExtractor{
         return c.toDataURL();
     }
 }
-
-window.devicePixelRatio = 1;
-console.log(imgPath);
 
 let gamingTrendLogo = convertURIToImageData(imgPath);
 
@@ -219,12 +221,14 @@ function drawSubText(ctx, desc){
 
 async function convertURIToImageData(URI) {
     return new Promise<HTMLImageElement>(function(resolve, reject) {
-      if (URI == null) return reject();    
-          var image = new Image();
-      image.addEventListener('load', function() {   
-        resolve(image);
-      }, false);
-      image.setAttribute('src', URI);
+        if (URI == null) {
+            return reject();
+        }
+        var image = new Image();
+        image.addEventListener('load', function() {   
+            resolve(image);
+        }, false);
+        image.setAttribute('src', URI);
     });
   }
 
@@ -233,3 +237,26 @@ interface ThumbnailGenInput{
     description?: string;
     subText?: string;
 }
+
+body.addEventListener('paste', (ev: ClipboardEvent) => {
+    let clipboardData = ev.clipboardData;
+    if(clipboardData.items.length){
+        let firstItem = clipboardData.items[0];
+        if( firstItem.kind === 'file' && firstItem.type.startsWith('image')){
+            var file = clipboardData.items[0].getAsFile();
+            var reader = new FileReader();
+            reader.onload = function(evt) {                
+                backgroundImagePromise = convertURIToImageData(reader.result);                
+            };
+            reader.readAsDataURL(file);
+        } else if( firstItem.kind === 'string') {
+            clipboardData.items[0].getAsString((str) =>{
+                console.log('clipboard paste as string', str);
+            });            
+        } else {
+            console.error(`unrecognized item type of ${firstItem.kind}`);
+        }
+    } else {
+        console.error('Nothing found on clipboard, if you are trying to paste a file, drag/drop instead');
+    }
+});
