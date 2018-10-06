@@ -1,8 +1,11 @@
-let canvas = document.getElementById('canvas') as HTMLCanvasElement;
-
-import imgPath from './images/gamingTrendLogo.png';
-// import backgroundImagePath from './images/background.png';
+import {convertURIToImageData} from './ImageUtil';
 import { YoutubeVideo } from './youtube-video';
+import {ThumbnailGenerator} from './ThumbnailGenerator';
+
+
+let canvas = document.getElementById('canvas') as HTMLCanvasElement;
+let thumbnailGenerator = new ThumbnailGenerator(canvas);
+
 
 var urls = ['https://youtu.be/X_Ch70KkMtE?t=2m57s', 'https://youtu.be/X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE&t=2m57s'];
 urls.forEach(u => console.log(u, YoutubeVideo.parseYoutubeUrl(u)));
@@ -44,20 +47,28 @@ document.body.addEventListener('drop', function (e) {
     e.stopPropagation();
     e.preventDefault();
     var file = e.dataTransfer.files[0];
-    var reader = new FileReader();
+    
 
     document.getElementById('dropPreview')
         .innerHTML = `Background Image: ${file.name} - type:${file.type} - size ${file.size}B`;
     console.info('dropped file detected', file);
 
-    reader.onload = function (e) {
-        // image.src = e.target.result;
-        //   image.src = reader.result as string;
-        backgroundImagePromise = convertURIToImageData(reader.result);
-        //   image.onload = setUp;
-    }
-    reader.readAsDataURL(file);
+    readImageFile(file);
 })
+
+function readImageFile(file: File) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        if (typeof reader.result === 'string') {
+            backgroundImagePromise = convertURIToImageData(reader.result);
+        }
+        else {
+            //TODO reject 
+            console.error('reader result is not a string', reader.result);
+        }
+    };
+    reader.readAsDataURL(file);
+}
 
 async function getVideoUrl(videoId) {
     return YoutubeVideo.getVideoInfo(videoId)
@@ -134,27 +145,6 @@ class VideoFrameExtractor {
     }
 }
 
-let gamingTrendLogo = convertURIToImageData(imgPath);
-
-function draw(input: ThumbnailGenInput) {
-    console.log('draw called', input);
-
-    let ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.drawImage(input.backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    drawOverlay(ctx);
-
-    if (input.description) {
-        drawDescription(ctx, input.description);
-    }
-    if (input.subText) {
-        drawSubText(ctx, input.subText);
-    }
-    gamingTrendLogo.then(gtImage => canvas.getContext("2d").drawImage(gtImage, 20, 590));
-};
-
 // var backgroundImage = new Image;
 // backgroundImage.addEventListener("load", function () {
 //     draw({backgroundImage, description, subText});
@@ -169,74 +159,11 @@ document.getElementById('redraw').onclick = () => {
         let youtubeInfo = YoutubeVideo.parseYoutubeUrl(youtubeUrl);
         getVideoFrame(youtubeInfo.id, youtubeInfo.seconds)
             .then(convertURIToImageData)
-            .then(backgroundImage => draw({ description: desc, subText: sub, backgroundImage }));
+            .then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
     } else {
-        backgroundImagePromise.then(backgroundImage => draw({ description: desc, subText: sub, backgroundImage }));
+        backgroundImagePromise.then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
     }
 };
-
-function drawOverlay(ctx: CanvasRenderingContext2D) {
-    var gradient = ctx.createLinearGradient(0, 530, 0, 720);
-    gradient.addColorStop(0, "rgba(0,0,0,0)");
-    gradient.addColorStop(1, "rgba(0,0,0,255)");
-    ctx.fillStyle = gradient;
-    // ctx.fillRect(0,0,200,100);
-    ctx.fillRect(0, 530, 1280, 190);
-    // var top = 720-190;
-    // var gradient = ctx.createLinearGradient(0,0,0,100);
-    // // gradient.addColorStop(0,"rgba(255,255,255,0)");
-    // gradient.addColorStop(0, 'white');
-    // gradient.addColorStop(1,"rgba(0,0,0,255)");
-    // ctx.fillStyle = gradient;
-    // ctx.fillRect(0,530, 1280,190);
-}
-
-function drawDescription(ctx, description) {
-
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    let oldLetterSpacing = canvas.style.letterSpacing;
-    canvas.style.letterSpacing = "0.7px";
-
-    ctx.fillStyle = '#37c5ff';
-    ctx.font = "bold 50pt 'Exo 2', sans-serif";
-    ctx.fillText(description, 150, 642);
-
-    canvas.style.letterSpacing = oldLetterSpacing;
-}
-
-function drawSubText(ctx, desc) {
-    let oldLetterSpacing = canvas.style.letterSpacing;
-    canvas.style.letterSpacing = "1.35px";
-
-    ctx.fillStyle = '#d4d4d4';
-    ctx.font = "bold 26pt 'Exo 2', sans-serif";
-    // ctx.fillText(desc, 154, 686);
-    ctx.fillText(desc, 154, 680);
-
-    canvas.style.letterSpacing = oldLetterSpacing;
-}
-
-async function convertURIToImageData(URI) {
-    return new Promise<HTMLImageElement>(function (resolve, reject) {
-        if (URI == null) {
-            return reject();
-        }
-        var image = new Image();
-        image.addEventListener('load', function () {
-            resolve(image);
-        }, false);
-        image.setAttribute('src', URI);
-    });
-}
-
-interface ThumbnailGenInput {
-    backgroundImage?: HTMLCanvasElement | HTMLVideoElement | HTMLImageElement | ImageBitmap;
-    description?: string;
-    subText?: string;
-}
 
 body.addEventListener('paste', (ev: ClipboardEvent) => {
     let clipboardData = ev.clipboardData;
@@ -244,11 +171,7 @@ body.addEventListener('paste', (ev: ClipboardEvent) => {
         let firstItem = clipboardData.items[0];
         if (firstItem.kind === 'file' && firstItem.type.startsWith('image')) {
             var file = clipboardData.items[0].getAsFile();
-            var reader = new FileReader();
-            reader.onload = function (evt) {
-                backgroundImagePromise = convertURIToImageData(reader.result);
-            };
-            reader.readAsDataURL(file);
+            readImageFile(file);
         } else if (firstItem.kind === 'string') {
             clipboardData.items[0].getAsString((str) => {
                 console.log('clipboard paste as string', str);
