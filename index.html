@@ -60,6 +60,12 @@
             opacity: 1;
             z-index: 200;
         }
+
+        #background-image{
+            position: absolute;
+            width: 1280px;
+            height: 720px;
+        }
         
         #ref-image{
             position: absolute;
@@ -73,7 +79,7 @@
     </nav>
     <div class="flexrow">
         <div>
-            <p>Directions: Either drag and drop a background image anywhere on this page, or paste the 'youtube share code' (with optional timestamp)</p>
+            <p>Directions: Either drag and drop a background image anywhere on this page, paste the image data on the page.  You can also paste the 'youtube share code' (with optional timestamp) in the youtube share url box.</p>
             <p>Specify the text description and subtext for the image, then click 'draw image'.  Once the image is rendered you can right click the image and choose the 'save as' option to save the image.</p>
             <div class="callout">
                 <h1>Requirements for using youtube video as background image</h1>
@@ -112,14 +118,16 @@
             </fieldset>
             
         </div>
-        <div class="flexrow">
+        <div class="flexrow" style="margin-bottom: 20px;">
             <div class="pure-controls">
                 <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
-            </div></div>
+            </div>
+        </div>
     </form>
     <div class="flexrow">
         <canvas id="canvas" width="1280" height="720"></canvas>
-        <img id="ref-image" src="/images/youtube-thumb.png">
+        <img id="background-image" src="/images/empty-background.png">
+        <!-- <img id="ref-image" src="/images/youtube-thumb.png"> -->
     </div>    
 </body>
 <script src="./index.ts"></script>

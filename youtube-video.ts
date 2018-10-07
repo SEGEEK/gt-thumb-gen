@@ -1,3 +1,7 @@
+// Test code for url parser ...
+// var urls = ['https://youtu.be/X_Ch70KkMtE?t=2m57s', 'https://youtu.be/X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE&t=2m57s'];
+// urls.forEach(u => console.log(u, YoutubeVideo.parseYoutubeUrl(u)));
+
 export class YoutubeVideo{
     public static getVideoInfo(id){
         return fetch("https://www.youtube.com/get_video_info?video_id="+id, {"credentials":"omit","headers":{},"referrer":"http://localhost:8000/test.html","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})

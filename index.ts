@@ -5,14 +5,14 @@ import {ThumbnailGenerator} from './ThumbnailGenerator';
 
 let canvas = document.getElementById('canvas') as HTMLCanvasElement;
 let thumbnailGenerator = new ThumbnailGenerator(canvas);
-
-
-var urls = ['https://youtu.be/X_Ch70KkMtE?t=2m57s', 'https://youtu.be/X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE', 'https://www.youtube.com/watch?v=X_Ch70KkMtE&t=2m57s'];
-urls.forEach(u => console.log(u, YoutubeVideo.parseYoutubeUrl(u)));
-
 let body = document.body;
+let backgroundImage = document.getElementById('background-image') as HTMLCanvasElement;
 
-
+function setBackgroundImageSrc(image){
+    console.info('setting background image');
+    backgroundImage.setAttribute('src', image);
+    return image;
+}
 
 interface Rect {
     x: number;
@@ -60,6 +60,7 @@ function readImageFile(file: File) {
     var reader = new FileReader();
     reader.onload = function (e) {
         if (typeof reader.result === 'string') {
+            setBackgroundImageSrc(reader.result);
             backgroundImagePromise = convertURIToImageData(reader.result);
         }
         else {
@@ -159,6 +160,7 @@ document.getElementById('redraw').onclick = () => {
         let youtubeInfo = YoutubeVideo.parseYoutubeUrl(youtubeUrl);
         getVideoFrame(youtubeInfo.id, youtubeInfo.seconds)
             .then(convertURIToImageData)
+            .then(setBackgroundImageSrc)
             .then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
     } else {
         backgroundImagePromise.then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
