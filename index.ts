@@ -9,7 +9,7 @@ let body = document.body;
 let backgroundImage = document.getElementById('background-image') as HTMLCanvasElement;
 
 function setBackgroundImageSrc(image){
-    console.info('setting background image');
+    console.info('setting background image', image);
     backgroundImage.setAttribute('src', image);
     return image;
 }
@@ -141,6 +141,7 @@ class VideoFrameExtractor {
         var ctx = c.getContext('2d');
         c.width = this.backgroundVideo.videoWidth;
         c.height = this.backgroundVideo.videoHeight;
+        console.log('getting frame', c);
         ctx.drawImage(this.backgroundVideo, 0, 0, c.width, c.height);
         return c.toDataURL();
     }
@@ -159,8 +160,8 @@ document.getElementById('redraw').onclick = () => {
     if (youtubeUrl) {
         let youtubeInfo = YoutubeVideo.parseYoutubeUrl(youtubeUrl);
         getVideoFrame(youtubeInfo.id, youtubeInfo.seconds)
-            .then(convertURIToImageData)
             .then(setBackgroundImageSrc)
+            .then(convertURIToImageData)            
             .then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
     } else {
         backgroundImagePromise.then(backgroundImage => thumbnailGenerator.draw({ description: desc, subText: sub, backgroundImage }));
