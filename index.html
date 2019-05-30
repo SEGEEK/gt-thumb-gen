@@ -42,6 +42,7 @@
 
         #redraw{
             background-color: #37c5ff;
+            width: 100%;    
         }
         
         .callout h1{
@@ -52,6 +53,10 @@
 
         body{
             font-family: 'Exo 2', sans-serif;
+        }
+
+        input{
+            width: 100%;
         }
         
         /* these were for debugging ... keeping it around for a bit */
@@ -66,30 +71,17 @@
             width: 1280px;
             height: 720px;
         }
-        
-        #ref-image{
-            position: absolute;
-            opacity: 0;
-        }</style>
+        </style>
 </head>
 <body ondragover="return false;">
     <nav>
-        <img class="logo" src="http://gamingtrend.com/wp-content/uploads/2017/09/site-logo@2x.png" alt="GAMING TREND">
+        <img class="logo" src="/images/site-logo@2x.png" alt="GAMING TREND">
         <span>Thumbnail Image Generator</span>
     </nav>
     <div class="flexrow">
         <div>
-            <p>Directions: Either drag and drop a background image anywhere on this page, paste the image data on the page.  You can also paste the 'youtube share code' (with optional timestamp) in the youtube share url box.</p>
-            <p>Specify the text description and subtext for the image, then click 'draw image'.  Once the image is rendered you can right click the image and choose the 'save as' option to save the image.</p>
-            <div class="callout">
-                <h1>Requirements for using youtube video as background image</h1>
-                <p>Note: For youtube backgroud images you will need to bypass cors with <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en">this extension</a>.  Once it is installed remove the default pattern and add these ... </p>
-                <ul>
-                    <li><pre>https://*.googlevideo.com/*</pre></li>
-                    <li><pre>https://www.youtube.com/get_video_info*</pre></li>
-                </ul>
-                <p>Be sure to turn the extension off when you are done with this page as it may cause issues on other sites.</p>
-            </div>
+            <p>Directions: Either drag and drop a background image anywhere on this page, paste the image data on the page.</p>
+            <p>Specify the text description and subtext for the image, then click 'Draw'.  Once the image is rendered you can right click the image and choose the 'save as' option to save the image or choose 'copy image' to paste it into an image editor.</p>
         </div>
     </div>
     <form class="pure-form pure-form-stacked" onsubmit="return false;"></form>
@@ -105,29 +97,15 @@
                         <!-- <label for="subtext">Subtext</label> -->
                     <input id="subtext" type="text" placeholder="Subtext">
                 <!-- </div> -->
-            </fieldset>
-            <fieldset class="pure-group">
-                <!-- <div class="pure-control-group"> -->
-                        <!-- <label for="youtubeurl">Youtube Share Url</label> -->
-                        <input id="youtubeurl" type="text" placeholder="Youtube Share Url">
-                <!-- </div> -->
-
                 <div id="dropPreview"></div>
-        
-                
+                <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
             </fieldset>
             
-        </div>
-        <div class="flexrow" style="margin-bottom: 20px;">
-            <div class="pure-controls">
-                <button id="redraw" type="submit" class="pure-button pure-button-primary">Draw</button>
-            </div>
         </div>
     </form>
     <div class="flexrow">
         <canvas id="canvas" width="1280" height="720"></canvas>
         <img id="background-image" src="/images/empty-background.png">
-        <!-- <img id="ref-image" src="/images/youtube-thumb.png"> -->
     </div>    
 </body>
 <script src="./index.ts"></script>
