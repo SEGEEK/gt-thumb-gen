@@ -46,13 +46,13 @@ The github pages setup has things looking at the master branch/docs folder so th
 ## TODO:
  1. Needs some code cleanup (right now index.ts is a tangled mess, need to extract the pieces used to generate the thumbnail away from the dom)
     1. Extract Dom pieces away from canvas generation code (✓).
-    1. Move interfaces/classes into their own files.
+    1. Move interfaces/classes into their own files (✓).
  1. Get some proper image scaling ... right now I don't scale while preserving aspect ratio because it is late at night and my brain is not in the mood to math.  Plus I blame the clunky `Context2D.fillImage(...)` interface, perhaps there is an easier way to do what I want by modifying the 'Image' I am creating.
  1. Could use some test code.
  1. Potentially make a library around some of the functionality (I stole the youtubeVideo code from https://github.com/endlesshack/youtube-video and ported it to typescript).  It may be handy for other folks to use, although with the CORS issues I ran into I am not sure how useful it would be, or if others are willing to sink to my depths.  (Perhaps a CORS proxy like https://cors.io/ can help here ...)
-    1. Move the youtube extra instructions so they are less prominent since this is a less common use case.
-    1. Clean up usage instructions related to this, can do my own pre-flight check to see if the extension has been set up or not.  
-    1. Add a reminder to turn off extension after the image is generated.
+    1. Move the youtube extra instructions so they are less prominent since this is a less common use case.(✓)
+    1. Clean up usage instructions related to this, can do my own pre-flight check to see if the extension has been set up or not.  (✓)
+    1. Add a reminder to turn off extension after the image is generated.(✓)
 
  # License
  Do what you want but you are on your own license.  Feel free to use this code, probably shouldn't run nuclear power plants with it but hey I am not here to tell you what to do.  Either way, have fun but don't blame me if you cause an international incident or a reactor meltdown.
