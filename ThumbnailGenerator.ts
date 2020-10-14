@@ -65,7 +65,7 @@ export class ThumbnailGenerator{
         this.canvas.style.letterSpacing = "1.35px";
     
         ctx.fillStyle = '#d4d4d4';
-        ctx.font = "26pt 'league_gothicregular'";
+        ctx.font = "26pt 'Exo 2', sans-serif";
         // ctx.fillText(desc, 154, 686);
         ctx.fillText(desc, 154, 680);
     
